@@ -28,5 +28,6 @@ If the first argument is greater than the last then it counts down otherwise it 
 
 ## LICENSE
 
-Released under the Simplified BSD License
+copyright (c) 2014 All rights reserved.
+Released under the [Simplified BSD License](http://opensource.org/licenses/bsd-license.php)
 
