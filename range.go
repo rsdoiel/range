@@ -37,7 +37,7 @@ var Usage = func(exit_code int, msg string) {
  
  Count from one through five: %s 1 5
  Count from negative two to six: %s -- -2 6
- Count even number from two to ten: %s --increment=2 2 10
+ Count even numbers from two to ten: %s --increment=2 2 10
  Count down from ten to one: %s 10 1
 
  OPTIONS
@@ -45,7 +45,7 @@ var Usage = func(exit_code int, msg string) {
 `, msg, os.Args[0], os.Args[0], os.Args[0], os.Args[0], os.Args[0])
 
 	flag.VisitAll(func(f *flag.Flag) {
-		fmt.Fprintf(fh, "\t-%s\t(defaults to %s) %s\n", f.Name, f.Value, f.Usage)
+		fmt.Fprintf(fh, "\t-%s\t(defaults to %s) %s\n", f.Name, f.DefValue, f.Usage)
 	})
 
 	fmt.Fprintf(fh, `
