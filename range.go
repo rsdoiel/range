@@ -25,7 +25,12 @@ var (
 )
 
 var Usage = func(exit_code int, msg string) {
-	fmt.Fprintf(os.Stderr, `%s
+	var fh = os.Stderr
+
+	if exit_code == 0 {
+		fh = os.Stdout
+	}
+	fmt.Fprintf(fh, `%s
  USAGE %s STARTING_INTEGER ENDING_INTEGER [INCREMENT_INTEGER]
 
  EXAMPLES
@@ -39,9 +44,11 @@ var Usage = func(exit_code int, msg string) {
 
 `, msg, os.Args[0], os.Args[0], os.Args[0], os.Args[0], os.Args[0])
 
-	flag.PrintDefaults()
+	flag.VisitAll(func(f *flag.Flag) {
+		fmt.Fprintf(fh, "\t-%s\t(defaults to %s) %s\n", f.Name, f.Value, f.Usage)
+	})
 
-	fmt.Fprintf(os.Stderr, `
+	fmt.Fprintf(fh, `
 
  copyright (c) 2014 all rights reserved.
  Released under the Simplified BSD License
@@ -54,15 +61,15 @@ var Usage = func(exit_code int, msg string) {
 func init() {
 	const (
 		help_usage  = "Display this help document."
-		start_usage = "The starting integer (e.g. 1)"
-		end_usage   = "The ending integer (e.g. 10)"
-		inc_usage   = "The non-zero integer value to increment by (e.g. 1 or -1)"
+		start_usage = "The starting integer."
+		end_usage   = "The ending integer."
+		inc_usage   = "The non-zero integer increment value."
 	)
 
 	flag.IntVar(&start, "start", 0, start_usage)
 	flag.IntVar(&start, "s", 0, start_usage)
-	flag.IntVar(&end, "end", 9, end_usage)
-	flag.IntVar(&end, "e", 9, end_usage)
+	flag.IntVar(&end, "end", 0, end_usage)
+	flag.IntVar(&end, "e", 0, end_usage)
 	flag.IntVar(&increment, "increment", 1, inc_usage)
 	flag.IntVar(&increment, "i", 1, inc_usage)
 
@@ -74,6 +81,16 @@ func assertOk(e error, fail_msg string) {
 	if e != nil {
 		Usage(1, fmt.Sprintf(" %s\n %s\n", fail_msg, e))
 	}
+}
+
+func inRange(i, start, end int) bool {
+    if start <= end && i <= end {
+        return true
+    }
+    if start >= end && i >= end {
+        return true
+    }
+    return false
 }
 
 func main() {
@@ -102,12 +119,21 @@ func main() {
 	}
 	assertOk(err, "Increment must be a non-zero integer.")
 
-	if (end < start) && (increment > 0) {
-		increment = increment * -1
-	} else if (start < end) && (increment < 0) {
+    if start == end {
+      fmt.Printf("%d", start)
+      os.Exit(0)
+    }
+
+	// Normalize to a positive value.
+	if start <= end && increment < 0 {
 		increment = increment * -1
 	}
-	for i := start; i <= end; i = i + increment {
+	if start > end && increment > 0 {
+		increment = increment * -1
+	}
+
+	// Now count up or down as appropriate.
+	for i := start; inRange(i, start, end) == true; i = i + increment {
 		if i == start {
 			fmt.Printf("%d", i)
 		} else {
