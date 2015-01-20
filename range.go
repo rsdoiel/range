@@ -1,4 +1,4 @@
-/*
+/**
  * range.go - emit a list of integers separated by spaces starting from
  * first command line parameter to last command line parameter.
  *
@@ -24,7 +24,7 @@ var (
 	increment int
 )
 
-var Usage = func(exit_code int, msg string) {
+var usage = func(exit_code int, msg string) {
 	var fh = os.Stderr
 
 	if exit_code == 0 {
@@ -60,26 +60,26 @@ var Usage = func(exit_code int, msg string) {
 
 func init() {
 	const (
-		help_usage  = "Display this help document."
-		start_usage = "The starting integer."
-		end_usage   = "The ending integer."
-		inc_usage   = "The non-zero integer increment value."
+		helpUsage  = "Display this help document."
+		startUsage = "The starting integer."
+		endUsage   = "The ending integer."
+		incUsage   = "The non-zero integer increment value."
 	)
 
-	flag.IntVar(&start, "start", 0, start_usage)
-	flag.IntVar(&start, "s", 0, start_usage)
-	flag.IntVar(&end, "end", 0, end_usage)
-	flag.IntVar(&end, "e", 0, end_usage)
-	flag.IntVar(&increment, "increment", 1, inc_usage)
-	flag.IntVar(&increment, "i", 1, inc_usage)
+	flag.IntVar(&start, "start", 0, startUsage)
+	flag.IntVar(&start, "s", 0, startUsage)
+	flag.IntVar(&end, "end", 0, endUsage)
+	flag.IntVar(&end, "e", 0, endUsage)
+	flag.IntVar(&increment, "increment", 1, incUsage)
+	flag.IntVar(&increment, "i", 1, incUsage)
 
-	flag.BoolVar(&help, "help", help, help_usage)
-	flag.BoolVar(&help, "h", help, help_usage)
+	flag.BoolVar(&help, "help", help, helpUsage)
+	flag.BoolVar(&help, "h", help, helpUsage)
 }
 
-func assertOk(e error, fail_msg string) {
+func assertOk(e error, failMsg string) {
 	if e != nil {
-		Usage(1, fmt.Sprintf(" %s\n %s\n", fail_msg, e))
+		Usage(1, fmt.Sprintf(" %s\n %s\n", failMsg, e))
 	}
 }
 
@@ -115,7 +115,7 @@ func main() {
 	if argc == 3 {
 		increment, err = strconv.Atoi(argv[2])
 	} else if increment == 0 {
-		err = errors.New("increment was zero.")
+		err = errors.New("increment was zero")
 	}
 	assertOk(err, "Increment must be a non-zero integer.")
 
