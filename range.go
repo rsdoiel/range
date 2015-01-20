@@ -79,7 +79,7 @@ func init() {
 
 func assertOk(e error, failMsg string) {
 	if e != nil {
-		Usage(1, fmt.Sprintf(" %s\n %s\n", failMsg, e))
+		usage(1, fmt.Sprintf(" %s\n %s\n", failMsg, e))
 	}
 }
 
@@ -96,16 +96,16 @@ func inRange(i, start, end int) bool {
 func main() {
 	flag.Parse()
 	if help == true {
-		Usage(0, "")
+		usage(0, "")
 	}
 
 	argc := flag.NArg()
 	argv := flag.Args()
 
 	if argc < 2 {
-		Usage(1, "Must include start and end integers.")
+		usage(1, "Must include start and end integers.")
 	} else if argc > 3 {
-		Usage(1, "Too many command line arguments.")
+		usage(1, "Too many command line arguments.")
 	}
 
 	start, err := strconv.Atoi(argv[0])
