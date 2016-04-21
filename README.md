@@ -26,6 +26,16 @@ If the first argument is greater than the last then it counts down otherwise it 
 + *-i*, *--increment* The non-zero integer value to increment by (e.g. 1 or -1)
 + *-s*, "--start" The starting integer (e.g. 1)
 
+## Installation
+
+_range_ can be installed with the *go get* command.
+
+```
+    go get github.com/rsdoiel/range/...
+```
+
+
+
 ## LICENSE
 
 copyright (c) 2014 All rights reserved.
