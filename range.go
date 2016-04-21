@@ -19,8 +19,11 @@ import (
 	"time"
 )
 
+const version = "0.1.0"
+
 var (
-	help          bool
+	showVersion   bool
+	showHelp      bool
 	start         int
 	end           int
 	increment     int
@@ -57,21 +60,23 @@ var usage = func(exit_code int, msg string) {
 	})
 
 	fmt.Fprintf(fh, `
+ Version %s
 
  copyright (c) 2014 all rights reserved.
  Released under the Simplified BSD License
  See: http://opensource.org/licenses/bsd-license.php
 
-`)
+`, version)
 	os.Exit(exit_code)
 }
 
 func init() {
 	const (
-		helpUsage  = "Display this help document."
-		startUsage = "The starting integer."
-		endUsage   = "The ending integer."
-		incUsage   = "The non-zero integer increment value."
+		helpUsage    = "Display this help document."
+		versionUsage = "Display version"
+		startUsage   = "The starting integer."
+		endUsage     = "The ending integer."
+		incUsage     = "The non-zero integer increment value."
 	)
 
 	flag.IntVar(&start, "start", 0, startUsage)
@@ -83,8 +88,10 @@ func init() {
 	flag.BoolVar(&randomElement, "r", false, "Pick a range value from range")
 	flag.BoolVar(&randomElement, "random", false, "Pick a range value from range")
 
-	flag.BoolVar(&help, "help", help, helpUsage)
-	flag.BoolVar(&help, "h", help, helpUsage)
+	flag.BoolVar(&showHelp, "help", showHelp, helpUsage)
+	flag.BoolVar(&showHelp, "h", showHelp, helpUsage)
+	flag.BoolVar(&showVersion, "v", showVersion, versionUsage)
+	flag.BoolVar(&showVersion, "version", showVersion, versionUsage)
 }
 
 func assertOk(e error, failMsg string) {
@@ -105,8 +112,12 @@ func inRange(i, start, end int) bool {
 
 func main() {
 	flag.Parse()
-	if help == true {
+	if showHelp == true {
 		usage(0, "")
+	}
+	if showVersion == true {
+		fmt.Printf("Version %s\n", version)
+		os.Exit(0)
 	}
 
 	argc := flag.NArg()
