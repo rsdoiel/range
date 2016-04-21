@@ -46,7 +46,7 @@ var usage = func(exit_code int, msg string) {
  Count even numbers from two to ten: %s --increment=2 2 10
  Count down from ten to one: %s 10 1
  Pick a random number in range one and ten %s -r 1 10
- Pick a random even number in range two to %s 12 -r --increment=2 2 12
+ Pick a random even number in range two to %s 12 --random --increment=2 2 12
 
  OPTIONS
 
@@ -81,6 +81,7 @@ func init() {
 	flag.IntVar(&increment, "increment", 1, incUsage)
 	flag.IntVar(&increment, "i", 1, incUsage)
 	flag.BoolVar(&randomElement, "r", false, "Pick a range value from range")
+	flag.BoolVar(&randomElement, "random", false, "Pick a range value from range")
 
 	flag.BoolVar(&help, "help", help, helpUsage)
 	flag.BoolVar(&help, "h", help, helpUsage)
