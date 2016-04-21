@@ -13,19 +13,28 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"math/rand"
 	"os"
 	"strconv"
+	"time"
 )
 
+const version = "1.0.0"
+
 var (
-	help      bool
-	start     int
-	end       int
-	increment int
+	showVersion   bool
+	showHelp      bool
+	start         int
+	end           int
+	increment     int
+	randomElement bool
 )
 
 var usage = func(exit_code int, msg string) {
-	var fh = os.Stderr
+	var (
+		fh      = os.Stderr
+		appname = os.Args[0]
+	)
 
 	if exit_code == 0 {
 		fh = os.Stdout
@@ -34,36 +43,40 @@ var usage = func(exit_code int, msg string) {
  USAGE %s STARTING_INTEGER ENDING_INTEGER [INCREMENT_INTEGER]
 
  EXAMPLES
- 
+
  Count from one through five: %s 1 5
  Count from negative two to six: %s -- -2 6
  Count even numbers from two to ten: %s --increment=2 2 10
  Count down from ten to one: %s 10 1
+ Pick a random number in range one and ten %s -r 1 10
+ Pick a random even number in range two to %s 12 --random --increment=2 2 12
 
  OPTIONS
 
-`, msg, os.Args[0], os.Args[0], os.Args[0], os.Args[0], os.Args[0])
+`, msg, appname, appname, appname, appname, appname, appname, appname)
 
 	flag.VisitAll(func(f *flag.Flag) {
 		fmt.Fprintf(fh, "\t-%s\t(defaults to %s) %s\n", f.Name, f.DefValue, f.Usage)
 	})
 
 	fmt.Fprintf(fh, `
+ Version %s
 
  copyright (c) 2014 all rights reserved.
  Released under the Simplified BSD License
  See: http://opensource.org/licenses/bsd-license.php
 
-`)
+`, version)
 	os.Exit(exit_code)
 }
 
 func init() {
 	const (
-		helpUsage  = "Display this help document."
-		startUsage = "The starting integer."
-		endUsage   = "The ending integer."
-		incUsage   = "The non-zero integer increment value."
+		helpUsage    = "Display this help document."
+		versionUsage = "Display version"
+		startUsage   = "The starting integer."
+		endUsage     = "The ending integer."
+		incUsage     = "The non-zero integer increment value."
 	)
 
 	flag.IntVar(&start, "start", 0, startUsage)
@@ -72,9 +85,13 @@ func init() {
 	flag.IntVar(&end, "e", 0, endUsage)
 	flag.IntVar(&increment, "increment", 1, incUsage)
 	flag.IntVar(&increment, "i", 1, incUsage)
+	flag.BoolVar(&randomElement, "r", false, "Pick a range value from range")
+	flag.BoolVar(&randomElement, "random", false, "Pick a range value from range")
 
-	flag.BoolVar(&help, "help", help, helpUsage)
-	flag.BoolVar(&help, "h", help, helpUsage)
+	flag.BoolVar(&showHelp, "help", showHelp, helpUsage)
+	flag.BoolVar(&showHelp, "h", showHelp, helpUsage)
+	flag.BoolVar(&showVersion, "v", showVersion, versionUsage)
+	flag.BoolVar(&showVersion, "version", showVersion, versionUsage)
 }
 
 func assertOk(e error, failMsg string) {
@@ -84,19 +101,23 @@ func assertOk(e error, failMsg string) {
 }
 
 func inRange(i, start, end int) bool {
-    if start <= end && i <= end {
-        return true
-    }
-    if start >= end && i >= end {
-        return true
-    }
-    return false
+	if start <= end && i <= end {
+		return true
+	}
+	if start >= end && i >= end {
+		return true
+	}
+	return false
 }
 
 func main() {
 	flag.Parse()
-	if help == true {
+	if showHelp == true {
 		usage(0, "")
+	}
+	if showVersion == true {
+		fmt.Printf("Version %s\n", version)
+		os.Exit(0)
 	}
 
 	argc := flag.NArg()
@@ -119,10 +140,10 @@ func main() {
 	}
 	assertOk(err, "Increment must be a non-zero integer.")
 
-    if start == end {
-      fmt.Printf("%d", start)
-      os.Exit(0)
-    }
+	if start == end {
+		fmt.Printf("%d", start)
+		os.Exit(0)
+	}
 
 	// Normalize to a positive value.
 	if start <= end && increment < 0 {
@@ -132,12 +153,28 @@ func main() {
 		increment = increment * -1
 	}
 
+	// If randonElement than generate range and pick the ith random element from range
+	var (
+		ithArray []int
+		ith      = 0
+	)
+
 	// Now count up or down as appropriate.
 	for i := start; inRange(i, start, end) == true; i = i + increment {
-		if i == start {
-			fmt.Printf("%d", i)
+		if randomElement == true {
+			ithArray = append(ithArray, i)
 		} else {
-			fmt.Printf(" %d", i)
+			if i == start {
+				fmt.Printf("%d", i)
+			} else {
+				fmt.Printf(" %d", i)
+			}
 		}
+	}
+	// if randomElement we should an array we can pick the elements from
+	if randomElement == true {
+		rand.Seed(time.Now().Unix())
+		ith = rand.Intn(len(ithArray))
+		fmt.Printf("%d", ithArray[ith])
 	}
 }
