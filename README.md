@@ -1,4 +1,7 @@
 
+[![Go Report Card](http://goreportcard.com/badge/rsdoiel/range)](http://goreportcard.com/report/rsdoiel/range)
+
+
 # range
 
 Range is a simple utility for shell scripts that emits a list of integers starting with the first command line argument and ending with the last integer command line argument.
