@@ -44,12 +44,18 @@ var usage = func(exit_code int, msg string) {
 
  EXAMPLES
 
- Count from one through five: %s 1 5
- Count from negative two to six: %s -- -2 6
- Count even numbers from two to ten: %s --increment=2 2 10
- Count down from ten to one: %s 10 1
- Pick a random number in range one and ten %s -r 1 10
- Pick a random even number in range two to %s 12 --random --increment=2 2 12
+ Count from one through five: 
+     %s 1 5
+ Count from negative two to six: 
+     %s -- -2 6
+ Count even numbers from two to ten: 
+     %s --increment=2 2 10
+ Count down from ten to one: 
+     %s 10 1
+ Pick a random number in range one and ten:
+     %s -r 1 10
+ Pick a random even number in range two to twelve:
+     %s 12 --random --increment=2 2 12
 
  OPTIONS
 
