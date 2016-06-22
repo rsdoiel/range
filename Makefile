@@ -2,12 +2,15 @@
 # Simple Makefile
 #
 
-build: range.go
-	go build -o bin/range range.go 
+build:
+	go build -o bin/range cmds/range/range.go 
 
-clean: range
-	rm bin/range
+clean:
+	if [ -d bin ]; then rm -fR bin; fi
+	if [ -d dist ]; then rm -fR dist; fi
 
-install: range.go
-	go install range.go
+install:
+	env GOBIN=$HOME/bin go install cmds/range/range.go
 
+release:
+	./mk-release.sh
