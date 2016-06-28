@@ -21,3 +21,8 @@ _testmain.go
 
 *.exe
 *.test
+# project ignores
+*~
+*.swp
+bin/*
+dist/*
